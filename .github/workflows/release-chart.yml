@@ -66,6 +66,21 @@ jobs:
           helm push mcpo-${CHART_VERSION}.tgz oci://ghcr.io/${{ github.repository }}
           rm mcpo-${CHART_VERSION}.tgz
 
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.chart_version }}
+          name: Release v${{ steps.get_version.outputs.chart_version }}
+          body: |
+            ### Helm Chart Release
+            - Chart: mcpo
+            - Version: ${{ steps.get_version.outputs.chart_version }}
+            - OCI Registry: ghcr.io/${{ github.repository }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Update GitHub Pages
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         run: |
