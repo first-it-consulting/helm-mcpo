@@ -1,0 +1,17 @@
+# Local development scripts (not for public repo)
+install.sh
+push-to-oci.sh
+SCRIPTS.md
+
+# Generated files
+*.tgz
+Chart.lock
+
+# GitHub workflows (keep locally but not in public repo)
+.github/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo

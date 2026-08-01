@@ -8,7 +8,7 @@ image:
   repository: ghcr.io/open-webui/mcpo
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: git-47d6f7a
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
