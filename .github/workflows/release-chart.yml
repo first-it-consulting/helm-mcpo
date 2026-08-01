@@ -76,6 +76,26 @@ jobs:
           helm push mcpo-${CHART_VERSION}.tgz oci://ghcr.io/${{ github.repository }}
           rm mcpo-${CHART_VERSION}.tgz
 
+      - name: Generate Changelog
+        id: changelog
+        if: steps.get_version.outputs.skip_release != 'true'
+        run: |
+          # Get the previous tag
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+          
+          if [ -n "$PREVIOUS_TAG" ]; then
+            # Generate changelog from git commits
+            echo "Generating changelog from $PREVIOUS_TAG to ${{ steps.get_version.outputs.chart_version }}"
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" "${PREVIOUS_TAG}..HEAD")
+            echo "changelog<<EOF" >> $GITHUB_OUTPUT
+            echo "$CHANGELOG" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "changelog<<EOF" >> $GITHUB_OUTPUT
+            echo "Initial release" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create GitHub Release
         if: steps.get_version.outputs.skip_release != 'true'
         uses: softprops/action-gh-release@v1
@@ -87,6 +107,9 @@ jobs:
             - Chart: mcpo
             - Version: ${{ steps.get_version.outputs.chart_version }}
             - OCI Registry: ghcr.io/${{ github.repository }}
+            
+            ### Changelog
+            ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
         env:
