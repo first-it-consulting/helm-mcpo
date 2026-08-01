@@ -7,9 +7,6 @@ SCRIPTS.md
 *.tgz
 Chart.lock
 
-# GitHub workflows (keep locally but not in public repo)
-.github/
-
 # IDE and editor files
 .idea/
 .vscode/
