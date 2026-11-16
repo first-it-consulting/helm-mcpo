@@ -4,3 +4,7 @@ description: A Helm chart for deploying the mcpo proxy server
 name: mcpo
 type: application
 version: 0.2.7
+dependencies:
+- name: mcp-library
+  repository: https://arbuzov.github.io/mcp-helm/
+  version: 0.1.4
